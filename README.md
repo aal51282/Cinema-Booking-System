@@ -51,21 +51,19 @@ The Cinema E-Booking System is a web-based application that allows users to view
    cd ../backend && pnpm install
    ```
 
-4. Set up the database:
-   - Create a MySQL database named `cinema_booking`
-   - Update the database configuration in `backend/.env`
+4. Start the frontend server:
+   ```
+   cd frontend
+   pnpm dev
+   ```
 
 5. Start the backend server:
    ```
-   cd backend && pnpm dev
+   cd backend
+   pnpm dev
    ```
 
-6. Start the frontend development server:
-   ```
-   cd frontend && pnpm dev
-   ```
-
-7. Open your browser and visit `http://localhost:3000`
+6. Open your browser and visit `http://localhost:5173`
 
 ## Development Process
 
@@ -79,7 +77,6 @@ This project follows a hybrid incremental model combining Waterfall and Agile me
 ## Contributing
 
 We welcome contributions to improve the Cinema E-Booking System!
-
 
 ## License
 
