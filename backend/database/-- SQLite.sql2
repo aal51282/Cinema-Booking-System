@@ -1,0 +1,113 @@
+-- SQLite
+CREATE TABLE IF NOT EXISTS Tickets (
+    ticketId INTEGER PRIMARY KEY AUTOINCREMENT,
+    bookingId INTEGER NOT NULL, -- Foreign key to Bookings
+    showId INTEGER NOT NULL, -- Foreign key to Shows
+    ticketType TEXT NOT NULL, -- Adult, Child, Senior,
+    price DECIMAL(10, 2) NOT NULL, -- Store the ticket price
+    seatNumber TEXT NOT NULL,
+    FOREIGN KEY (bookingId) REFERENCES Bookings(bookingId),
+    FOREIGN KEY (showId) REFERENCES Shows(showId)
+);
+INSERT INTO Tickets (bookingId, showId, ticketType, price, seatNumber)
+VALUES 
+(1, 1, 'Adult', 15.00, 'A1'),
+(1, 1, 'Child', 10.00, 'A2'),
+(2, 2, 'Senior', 20.00, 'B1');
+
+CREATE TABLE IF NOT EXISTS Bookings (
+    bookingId INTEGER PRIMARY KEY AUTOINCREMENT,
+    userId INTEGER NOT NULL, -- Foreign key to Users table
+    bookingDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    totalAmount DECIMAL(10, 2) NOT NULL,
+    paymentStatus TEXT CHECK(paymentStatus IN ('Paid', 'Pending', 'Canceled')),
+    FOREIGN KEY (userId) REFERENCES Users(userId)
+);
+INSERT INTO Bookings (userId, bookingDate, totalAmount, paymentStatus)
+VALUES 
+(1, '2024-10-01 10:30:00', 29.99, 'Paid'),
+(2, '2024-10-02 11:00:00', 45.50, 'Paid');
+
+CREATE TABLE IF NOT EXISTS Promotions (
+    promotionId INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT,
+    discountPercentage DECIMAL(5, 2) NOT NULL,
+    startDate TIMESTAMP NOT NULL,
+    endDate TIMESTAMP NOT NULL
+);
+INSERT INTO Promotions (title, description, discountPercentage, startDate, endDate)
+VALUES 
+('Summer Sale', 'Get 20% off on all tickets', 20.00, '2024-06-01 00:00:00', '2024-08-31 23:59:59'),
+('Holiday Special', '15% off on weekend shows', 15.00, '2024-12-01 00:00:00', '2024-12-31 23:59:59'),
+('Student Discount', '10% off for students', 10.00, '2024-09-01 00:00:00', '2024-11-30 23:59:59');
+
+CREATE TABLE IF NOT EXISTS Rooms (
+    roomId INTEGER PRIMARY KEY AUTOINCREMENT,
+    roomName TEXT NOT NULL,
+    capacity INTEGER NOT NULL
+);
+INSERT INTO Rooms (roomName, capacity)
+VALUES 
+('Room A', 100),
+('Room B', 150),
+('Room C', 200);
+
+DROP TABLE IF EXISTS Shows;
+
+CREATE TABLE IF NOT EXISTS Shows (
+    showId INTEGER PRIMARY KEY AUTOINCREMENT,
+    movieId INTEGER NOT NULL,
+    roomId INTEGER NOT NULL, -- Foreign key to Rooms 
+    showDate TIMESTAMP NOT NULL,
+    startTime TIME NOT NULL,
+    endTime TIME NOT NULL,
+    FOREIGN KEY (movieId) REFERENCES Movies(id),
+    FOREIGN KEY (roomId) REFERENCES Rooms(roomId)
+);
+INSERT INTO Shows (showId, movieId, roomId, showDate, showTime, endDate)
+VALUES 
+     ((SELECT id FROM Movies WHERE title = 'Top Gun: Sky Strike'), 1, '2024-10-15', '18:30', '2024-10-15'),
+     ((SELECT id FROM Movies WHERE title = 'Alien: Dark Horizons'), 2, '2024-10-16', '20:00', '2024-10-16'),
+     ((SELECT id FROM Movies WHERE title = 'Home Alone: Holiday Havoc'), 3, '2024-10-17', '21:00', '2024-10-17');
+
+CREATE TABLE IF NOT EXISTS ShowSeats (
+    seatId INTEGER PRIMARY KEY AUTOINCREMENT,
+    showId INTEGER NOT NULL, -- Foreign key to Shows table
+    seatNumber TEXT NOT NULL,
+    isBooked BOOLEAN DEFAULT 0, 
+    FOREIGN KEY (showId) REFERENCES Shows(showId)
+);
+INSERT INTO ShowSeats (showId, seatNumber, isBooked)
+VALUES 
+(1, 'A1', 1), -- 1 will show booked and 0 is still avaliable
+(1, 'A2', 0), 
+(2, 'B1', 1), 
+(2, 'B2', 0), 
+(3, 'C1', 0), 
+(3, 'C2', 1); 
+
+CREATE TABLE IF NOT EXISTS TicketTypePrices (
+    ticketTypeId INTEGER PRIMARY KEY AUTOINCREMENT,
+    ticketType TEXT NOT NULL, -- E.g., 'Adult', 'Child'
+    price DECIMAL(10, 2) NOT NULL
+);
+INSERT INTO TicketTypePrices (ticketType, price)
+VALUES 
+('Adult', 15.00),
+('Child', 10.00),
+('Senior', 12.00);
+
+ 
+ SELECT name FROM sqlite_master WHERE type='table';
+ SELECT * FROM Movies;
+ SELECT * FROM Users;
+ SELECT * FROM Payment_cards;
+ SELECT * FROM Tickets;
+ SELECT * FROM Bookings;
+ SELECT * FROM Promotions;
+ SELECT * FROM Rooms;
+ SELECT * FROM Shows;
+ SELECT * FROM ShowSeats;
+ SELECT * FROM TicketTypePrices;
+

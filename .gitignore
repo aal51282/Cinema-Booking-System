@@ -1,0 +1,14 @@
+# Editor directories and files
+.vscode/*
+node_modules/*
+
+backend/build/*
+backend/node_modules/*
+backend/.DS_Store
+# backend/.env
+
+# Cursor
+.cursorrules
+
+# Backend
+backend/database/usedb.ipynb
